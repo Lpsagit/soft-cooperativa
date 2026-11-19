@@ -1,0 +1,39 @@
+# Variables de entorno
+.env
+.env.*
+!.env.template
+!.env.example
+
+# Dependencias
+node_modules/
+
+# Archivos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Archivos de compilación
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editores
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.swp
+
+# Datos y respaldos
+/data/
+backups_coop/
+*.bundle
+
+# Archivos subidos por usuarios
+backend-api/uploads/*
+!backend-api/uploads/.gitkeep

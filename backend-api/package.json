@@ -1,0 +1,52 @@
+{
+  "name": "cooperativa_papelerito",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "rimraf ./dist && tsc",
+    "start": "npm run build && node dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^4.17.18",
+    "@types/express-fileupload": "^1.5.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^2.1.0",
+    "@types/node": "^20.19.30",
+    "@types/nodemailer": "^8.0.1",
+    "@types/pdfmake": "^0.2.11",
+    "@types/pg": "^8.15.1",
+    "@types/socket.io": "^3.0.1",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "decimal.js": "^10.6.0",
+    "dotenv": "^16.3.1",
+    "env-var": "^7.4.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.22.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.1.1",
+    "nodemailer": "^10.0.15",
+    "pdfmake": "^0.2.20",
+    "pg": "^8.16.0",
+    "sharp": "^0.35.5",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "$uuid"
+    }
+  }
+}

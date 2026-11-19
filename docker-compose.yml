@@ -1,0 +1,151 @@
+services:
+
+  # ============================================================
+  # BACKEND API
+  # ============================================================
+  backend_api_coop:
+    build:
+      context: ./backend-api
+      dockerfile: Dockerfile
+
+    container_name: backend_api_coop
+
+    restart: unless-stopped
+
+    env_file:
+      - ./backend-api/.env
+
+    expose:
+      - "3000"
+
+    volumes:
+      - backend_uploads:/app/uploads
+
+    networks:
+      - proxy_manager_net
+      - backend_network
+
+    depends_on:
+      postgres_coop:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+        #  "node -e \"require('http').get('http://127.0.0.1:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""
+
+  # ============================================================
+  # FRONTEND CLIENTE
+  # ============================================================
+  frontend_cliente_coop:
+    build:
+      context: ./frontend-client
+      dockerfile: Dockerfile
+
+    container_name: frontend_cliente_coop
+
+    restart: unless-stopped
+
+    env_file:
+      - ./frontend-client/.env
+
+    expose:
+      - "80"
+
+    networks:
+      - proxy_manager_net
+
+
+  # ============================================================
+  # FRONTEND ADMIN
+  # ============================================================
+  frontend_admin_coop:
+    build:
+      context: ./frontend-admin
+      dockerfile: Dockerfile
+
+    container_name: frontend_admin_coop
+
+    restart: unless-stopped
+
+    env_file:
+      - ./frontend-admin/.env
+
+    expose:
+      - "80"
+
+    networks:
+      - proxy_manager_net
+
+
+  # ============================================================
+  # POSTGRESQL
+  # ============================================================
+  postgres_coop:
+    image: postgres:16
+
+    container_name: postgres_coop
+
+    restart: unless-stopped
+
+    environment:
+      TZ: ${TZ}
+      PGTZ: ${TZ}
+
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - backend_network
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
+# ==============================================================
+# VOLUMES
+# ==============================================================
+volumes:
+
+  postgres_data:
+    name: postgres_data_coop
+
+  backend_uploads:
+    name: backend_uploads_coop
+
+
+# ==============================================================
+# NETWORKS
+# ==============================================================
+
+networks:
+
+  # Red externa donde ya está conectado Nginx Proxy Manager
+  proxy_manager_net:
+    external: true
+    name: proxy_manager_net
+
+  # Red privada entre backend y PostgreSQL
+  backend_network:
+    name: proyecto_backend_network
+    driver: bridge
+    internal: true
